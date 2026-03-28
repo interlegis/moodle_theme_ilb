@@ -713,10 +713,16 @@
             </div>
         </div>
 
+        {{#marquet_superior}}
+            <div class="row">
+                {{{ linha_marquet }}}
+            </div>
+        {{/marquet_superior}}
+
         <!-- logotipo e texto -->
         {{#habilitar_destaque}}
         <div class="col-xs-12 col-md-4 text-center lessPaddingResponsible">
-            <a href='{{{moodle_url}}}/course/view.php?id={{{curso_destaque}}}'>
+            <a href='{{{url_destaque}}}'>
             <img src='{{{imagem_destaque}}}' style="padding: 0 !important" class="col-xs-12 text-center lessPaddingResponsible"/>
             </a>
         </div>
@@ -744,7 +750,7 @@
         <!-- video  -->
 
         <div class="tamanhoVideo col-xs-12 col-md-4 noCashing lessPaddingResponsible">
-            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/mvqFvkBF0PE" frameborder="0" allowfullscreen style="padding: 0;" class="heightVar"></iframe>
+            <iframe width="100%" height="100%" src="{{video_institucional}}" frameborder="0" allowfullscreen style="padding: 0;" class="heightVar"></iframe>
         </div>
 
         <div class="col-xs-12 hidden-md hidden-lg">
@@ -779,9 +785,9 @@
                 </div>
                 <div class="col-xs-12" style="background-color: #F7F7F7; border: 1px solid #E6E6E6; border-top: 0; padding-bottom: 3%;">
                     <div class="col-xs-5" style="padding-top: 3%; line-height: 100%; padding-left: 0;">
-                        <a href="login/signup.php" style="font-size:13px;">Cadastre-se</a>
+                        <a href="{{signup}}" style="font-size:13px;">Cadastre-se</a>
                         <br />
-                        <a href="login/forgot_password.php" style="font-size:11px;">Perdeu a senha?</a>
+                        <a href="{{forgot-password}}" style="font-size:11px;">Perdeu a senha?</a>
                     </div>
                     <div class="pull-right">
                         <input class="btn btn-primary" type="submit" value="Acessar">
@@ -984,6 +990,14 @@
     <br/>
     <br/>
 </div>
+
+<!-- linha de marqueting inferior -->
+{{#marquet_inferior}}
+<div class="row">
+    {{{ linha_marquet }}}
+</div>
+{{/marquet_inferior}}
+
 <!-- Categorias de cursos -->
 <div class="row paddings15">
     <div class="col-xs-12">
