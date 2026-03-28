@@ -38,7 +38,13 @@ $linha_marquet = format_text($this->page->theme->settings->linha_marquet, FORMAT
 $video_institucional = $this->page->theme->settings->video_institucional;
 $signup = $this->page->theme->settings->signup;
 $forgotpwd = $this->page->theme->settings->forgotpwd;
-$course = get_course($curso_destaque);
+
+try {
+	$course = get_course($curso_destaque);
+	$courseurl = (new moodle_url('/course/view.php', ['id' => $course->id]))->out(false);
+} catch (Exception $e) {
+	$courseurl = null;
+}
 
 if (!$video_institucional) {
 	$video_institucional = "https://www.youtube.com/embed/mvqFvkBF0PE";
@@ -52,12 +58,6 @@ if (!$forgotpwd) {
 }
 if ($imagem_destaque) {
 	$imagem_destaque = $this->page->theme->setting_file_url('imagem_destaque', 'imagem_destaque');
-}
-
-if ($course) {
-	$courseurl = (new moodle_url('/course/view.php', ['id' => $course->id]))->out(false);
-} else {
-	$courseurl = null;
 }
 
 if (!$url_destaque) {
