@@ -562,6 +562,22 @@
     padding: 15px 15px 0 15px;
     border-top: 1px dotted #cccccc;
 }
+
+.panel-body ol {
+    list-style: auto;
+    margin-left: 15px;
+}
+
+a.disabled {
+    color: #777;
+    pointer-events: none;
+    cursor: default;
+}
+
+#breadcrumbs-outros.hidden::before {
+    content: '';
+}
+
 .conteudoPrincipal .noticias .panel-heading {
     border-top: 1px solid #cccccc;
     border-bottom: 1px solid #cccccc;

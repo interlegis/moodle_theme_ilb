@@ -38,6 +38,11 @@ $linha_marquet = format_text($this->page->theme->settings->linha_marquet, FORMAT
 $video_institucional = $this->page->theme->settings->video_institucional;
 $signup = $this->page->theme->settings->signup;
 $forgotpwd = $this->page->theme->settings->forgotpwd;
+$servico = $this->page->theme->settings->servico;
+$telefone = $this->page->theme->settings->telefone;
+$email = $this->page->theme->settings->email;
+$redes_sociais = $this->page->theme->settings->redes_sociais;
+$num_perguntas = $this->page->theme->settings->num_perguntas;
 
 try {
 	$course = get_course($curso_destaque);
@@ -86,6 +91,31 @@ switch ($this->page->theme->settings->posicao_marquet) {
 		break;
 };
 
+if ($num_perguntas) {
+	$faq = [];
+	for ($pergunta = 1; $pergunta <= $num_perguntas; $pergunta++) {
+		$faq[] = [
+			"indice" => $pergunta,
+			"pergunta" => $this->page->theme->settings->{"pergunta".$pergunta},
+			"resposta" => format_text($this->page->theme->settings->{"resposta".$pergunta}, FORMAT_HTML),
+		];
+	}
+};
+
+if (!$servico) {
+	$servico = "Serviço de Ensino a Distância – SEED";
+}
+if (!$telefone) {
+	$telefone = "+55 (61) 3303-1475";
+}
+if (!$email) {
+	$email = "ilbead@senado.leg.br";
+}
+if (!$redes_sociais) {
+	$redes_sociais = ('<p style="font-weight:bold;">Facebook</p>
+         <p><a href="https://www.facebook.com/ilbsenado">https://www.facebook.com/ilbsenado</a></p>');
+};
+
 $templatecontext = [
 	'sitename' => format_string($SITE->shortname, true, ['context' => context_course::instance(SITEID), "escape" => false]),
 	'output' => $OUTPUT,
@@ -111,7 +141,18 @@ $templatecontext = [
 	'marquet_inferior' => $marquet_inferior,
 	'linha_marquet' => $linha_marquet,
 	'signup' => $signup,
-	'forgot-password' => $forgotpwd
+	'forgot-password' => $forgotpwd,
+	'hide_validador' => $this->page->theme->settings->hide_validador,
+	'hide_obter' => $this->page->theme->settings->hide_obter,
+	'hide_antigos' => $this->page->theme->settings->hide_antigos,
+	'texto_antigos' => $this->page->theme->settings->texto_antigos ?: 'Emissão de certificados para alunos inscritos no período de 2010/2013.',
+	'link_antigos' => $this->page->theme->settings->link_antigos ?: 'http://www17.senado.gov.br/user/login',
+	'servico' => $servico,
+	'telefone' => $telefone,
+	'email' => $email,
+	'redes_sociais' => format_text($redes_sociais, FORMAT_HTML),
+	'tem_faq' => ($num_perguntas > 0),
+	'faq' => $faq
 ];
 
 if (isloggedin()) {

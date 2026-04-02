@@ -54,10 +54,6 @@
         color: #787878;
     }
 
-    .tabcontent {
-        display:none;
-    }
-
     .footer {
         bottom: 0;
         width: 100%;
@@ -137,14 +133,28 @@
     function ativaAba(evt, nomeAba) {
         // Declare all variables
         var i, tabcontent, tablinks;
+        const thisTab = document.getElementById(nomeAba);
+        const breadcrumbOutros = document.getElementById("breadcrumbs-outros");
+        const breadcrumbsCurrent = document.getElementById("breadcrumbs-current");
 
         // Get all elements with class="tabcontent" and hide them
         tabcontent = document.getElementsByClassName("tabcontent");
         for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
+            tabcontent[i].classList.add("hidden");
         }
 
         // Show the current tab, and add an "active" class to the button that opened the tab
-        document.getElementById(nomeAba).style.display = "block";
+        thisTab.classList.remove("hidden");
+
+        // Adjust breadcrumbs
+        if (nomeAba == 'div.principal') {
+            document.getElementById("breadcrumbs-saberes-link").classList.add("disabled");
+            breadcrumbOutros.classList.add("hidden");
+            breadcrumbsCurrent.textContent = '';
+        } else {
+            document.getElementById("breadcrumbs-saberes-link").classList.remove("disabled");
+            breadcrumbOutros.classList.remove("hidden");
+            breadcrumbsCurrent.textContent = evt.target.innerText;
+        }
     }
 </script>
