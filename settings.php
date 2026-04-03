@@ -239,4 +239,75 @@ if ($ADMIN->fulltree) {
         }
     }
     $settings->add($page);
+
+    // Categorias de cursos ---------------------------------------------------
+    $page = new admin_settingpage('theme_ilb_categorias', 'Categoria de cursos');
+
+    $context = context_system::instance();
+    $fs = get_file_storage();
+    $files = $fs->get_area_files(
+        $context->id,
+        'theme_ilb',
+        'icones_categoria',
+        0,
+        'itemid, filepath, filename',
+        false
+    );
+
+    $icon_choices = [];
+    foreach ($files as $file) {
+        $icon_choices[$file->get_filename()] = $file->get_filename();
+    }
+
+    $setting = new admin_setting_configstoredfile(
+        'theme_ilb/icon_files',
+        'Repositório de ícones para as categorias',
+        'Após adicionar novos arquivos de ícones, salve as configurações para que eles fiquem acessíveis nas configurações das categorias',
+        'icones_categoria',
+        0,
+        array('maxfiles' => 30, 'accepted_types' => array('image')));
+    $page->add($setting);
+
+    $page->add(new admin_setting_configtext(
+        'theme_ilb/num_categorias',
+        'Número de categorias',
+        'Quantas gategorias de cursos deseja mostrar ?<br/><strong>Obs:</strong> Após mudar este valor, salve as mudanças para configurar as categorias',
+        0,
+        PARAM_INT,
+        5
+    ));
+
+    $num_categorias = get_config("theme_ilb", "num_categorias");
+
+    if ($num_categorias) {
+        for ($categoria = 1; $categoria <= $num_categorias; $categoria++) {
+            $page->add(new admin_setting_heading(
+                "theme_ilb/categoria{$categoria}_heading",
+                "{$categoria}ª categoria",
+                ""
+            ));
+            $page->add(new admin_settings_coursecat_select(
+                "theme_ilb/categoria{$categoria}",
+                "Categoria",
+                "",
+                ""
+            ));
+            $page->add(new admin_setting_configtext(
+                "theme_ilb/desc_categoria{$categoria}",
+                "Título breve",
+                "",
+                "",
+                PARAM_TEXT,
+                50
+            ));
+            $page->add(new admin_setting_configselect(
+                "theme_ilb/icone_categoria{$categoria}",
+                "Ícone",
+                "",
+                0,
+                $icon_choices
+            ));
+        }
+    }
+    $settings->add($page);    
 }

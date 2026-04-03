@@ -43,6 +43,7 @@ $telefone = $this->page->theme->settings->telefone;
 $email = $this->page->theme->settings->email;
 $redes_sociais = $this->page->theme->settings->redes_sociais;
 $num_perguntas = $this->page->theme->settings->num_perguntas;
+$num_categorias = $this->page->theme->settings->num_categorias;
 
 try {
 	$course = get_course($curso_destaque);
@@ -102,6 +103,28 @@ if ($num_perguntas) {
 	}
 };
 
+if ($num_categorias) {
+	$context = context_system::instance();
+	$categorias = [];
+	for ($categoria = 1; $categoria <= $num_categorias; $categoria++) {
+		$icon_url = moodle_url::make_pluginfile_url(
+			$context->id,
+			"theme_ilb",
+			'icones_categoria',
+			0,
+			"/",
+			$this->page->theme->settings->{"icone_categoria{$categoria}"}			
+		);
+		$categorias[] = [
+			"indice" => $categoria,
+			"categoria" => $this->page->theme->settings->{"categoria{$categoria}"},
+			"desc_categoria" => $this->page->theme->settings->{"desc_categoria{$categoria}"},
+			"icone_categoria" => $icon_url,
+			"quebra" => ($categoria % 4 == 0) && ($categoria < $num_categorias)
+		];
+	}
+}
+
 if (!$servico) {
 	$servico = "Serviço de Ensino a Distância – SEED";
 }
@@ -152,7 +175,9 @@ $templatecontext = [
 	'email' => $email,
 	'redes_sociais' => format_text($redes_sociais, FORMAT_HTML),
 	'tem_faq' => ($num_perguntas > 0),
-	'faq' => $faq
+	'faq' => $faq,
+	'tem_categorias' => ($num_categorias > 0),
+	'categorias' => $categorias
 ];
 
 if (isloggedin()) {

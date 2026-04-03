@@ -246,8 +246,6 @@
 <!-- Conteúdo Principal -->
 <div id="div.principal" class="container tabcontent noCashing" style="display:block">
     <div class="row">
-        <!-- Pagina Inicial > Escola de Governo > Saberes -->
-        <!-- Breadcrumbs -->
         {{#marquet_superior}}
             <div class="row">
                 {{{ linha_marquet }}}
@@ -278,10 +276,10 @@
         </div>
         {{/habilitar_destaque}}
 
-
         <div class="col-xs-12 hidden-md hidden-lg">
             <br />
         </div>
+
         <!-- video  -->
 
         <div class="tamanhoVideo col-xs-12 col-md-4 noCashing lessPaddingResponsible">
@@ -295,8 +293,7 @@
         {{^username}}
         <div class="col-xs-12 col-md-4">
             <form class="loginform" id="login" method="post" action="login/index.php">
-		<input type="hidden" name="logintoken" value="{{logintoken}}">
-
+		        <input type="hidden" name="logintoken" value="{{logintoken}}">
                 <div class="col-xs-12" style="background-color: #F7F7F7; border: 1px solid #E6E6E6; border-bottom: 0;">
                     <h4 style="color: #0F5688; border: 0;">ACESSO</h4>
                     <div class="c1 fld username">
@@ -432,9 +429,6 @@
 	    </style>
     {{/loginChangeNotification}}
 
-
-
-
         <div class="col-xs-12 col-md-4 bemVindoHeight lessPaddingResponsible SmallScreen" style="background:#f7f7f7; border:1px solid #e6e6e6; ">
             <div style="padding-top: 1.5%;">
                 <div class="row">
@@ -469,12 +463,6 @@
             </div>
         </div>
 
-
-
-
-
-
-
     <div class="col-xs-12 col-md-4 bemVindoHeight lessPaddingResponsible BigScreen">
         <div style="background:#f7f7f7; border:1px solid #e6e6e6; padding-top: 1.5%;">
             <h3 style="margin-top: auto; margin-bottom: 8%;text-align: center;">Bem-vindo ao Saberes!</h3>
@@ -502,23 +490,6 @@
            </div>
         </div>
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </div>
 {{/username}}
 <div class="col-xs-12 col-md-12 col-lg-12">
@@ -534,6 +505,7 @@
 {{/marquet_inferior}}
 
 <!-- Categorias de cursos -->
+{{#tem_categorias}}
 <div class="row paddings15">
     <div class="col-xs-12">
         <div class="col-xs-12" style="background-image:url('{{{fundo-c}}}');background-repeat: repeat-x;">
@@ -545,45 +517,17 @@
     </div>
     <div align='center'>
         <div class="row">
+            {{#categorias}}
             <div class="col-xs-6 col-md-3 text-center">
-                <a href='course/index.php?categoryid=134'><img src="{{{Cursos-on-line-sem-tutor}}}"></a>
-                <p>Cursos on-line sem tutoria</p>
+                <a href='course/index.php?categoryid={{{categoria}}}'><img src="{{{icone_categoria}}}"></a>
+                <p>{{{desc_categoria}}}</p>
             </div>
-            <div class="col-xs-6 col-md-3 text-center">
-                <a href='course/index.php?categoryid=130'><img src="{{{Cursos-on-line}}}"></a>
-                <p>Cursos on-line com tutoria</p>
-            </div>
-            <div class="col-xs-6 col-md-3 text-center">
-                <a href='course/index.php?categoryid=102'><img src="{{{formacao_interna}}}"></a>
-                <p>Formação interna </p>
-            </div>
-            <div class="col-xs-6 col-md-3 text-center">
-                <a href='course/index.php?categoryid=46'><img src="{{{pos-graduacao}}}"></a>
-                <p>Pós-graduação</p>
-            </div>
-
-        </div>
-        <div class="row">
-            <div class="col-xs-6 col-md-3 text-center">
-                <a href='course/index.php?categoryid=112'><img src="{{{oficinas-interlegis}}}"></a>
-                <p>Oficinas Interlegis</p>
-            </div>
-            <div class="col-xs-6 col-md-3 text-center">
-                <a href='course/index.php?categoryid=127'><img src="{{{video-aula}}}"></a>
-                <p>Videoaulas</p>
-            </div>
-            <div class="col-xs-6 col-md-3 text-center">
-                <a href='course/index.php?categoryid=180'><img src="{{{projetos_especiais}}}"></a>
-                <p>Projetos Especiais</p>
-            </div>
-            <div class="col-xs-6 col-md-3 text-center">
-                <a href='course/index.php?categoryid=163'><img src="{{{conheca-senado}}}"></a>
-                <p>Conheça o Senado</p>
-            </div>
+            {{/categorias}}
         </div>
     </div>
     <div class="col-xs-12 col-md-12 col-lg-12" style="border: 1px solid grey;"></div>
 </div>
+{{/tem_categorias}}
 <br />
 <!-- Rodapé completo -->
 </div>{{>theme_ilb/footer_front}}

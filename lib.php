@@ -69,7 +69,7 @@ function theme_ilb_get_extra_scss($theme) {
  * @return bool
  */
 function theme_ilb_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array()) {
-    if ($context->contextlevel == CONTEXT_SYSTEM && (in_array($filearea, ['logo', 'backgroundimage', 'imagem_destaque']))) {
+    if ($context->contextlevel == CONTEXT_SYSTEM && (in_array($filearea, ['logo', 'backgroundimage', 'imagem_destaque', 'icones_categoria']))) {
         $theme = theme_config::load('ilb');
         // By default, theme files must be cache-able by both browsers and proxies.
         if (!array_key_exists('cacheability', $options)) {
