@@ -211,11 +211,12 @@
     <div id="div.faq" class="container tabcontent tabContentFaq hidden">
         <div class="col-xs-12 col-md-12 col-lg-12">
             <div class="panel-group" id="accordion-faq">
+                <ol style="list-style: auto;">
                 {{#faq}}
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion-faq" href="#collapse-{{indice}}">{{pergunta}}</a>
+                            <a data-toggle="collapse" data-parent="#accordion-faq" href="#collapse-{{indice}}"><li style="margin-left: 3rem;">{{pergunta}}</li></a>
                         </h4>
                     </div>
                     <div id="collapse-{{indice}}" class="panel-collapse collapse">
@@ -223,6 +224,7 @@
                     </div>
                 </div>
                 {{/faq}}
+                </ol>
             </div>
         </div>
     </div>
@@ -253,16 +255,8 @@
         {{/marquet_superior}}
 
         <!-- logotipo e texto -->
-        {{#habilitar_destaque}}
+        {{#destaque_banner}}
         <div class="col-xs-12 col-md-4 text-center lessPaddingResponsible">
-            <a href='{{{url_destaque}}}'>
-            <img src='{{{imagem_destaque}}}' style="padding: 0 !important" class="col-xs-12 text-center lessPaddingResponsible"/>
-            </a>
-        </div>
-        {{/habilitar_destaque}}
-        {{^habilitar_destaque}}
-        <div class="col-xs-12 col-md-4 text-center lessPaddingResponsible">
-
             <div style="background-color: #F7F7F7; border: 1px solid #E6E6E6; border-bottom: 0; padding: 11% 0 12% 0;">
                 <img src='{{{logo_saberes_xl}}}' width='48%' height='48%' />
             </div>
@@ -274,7 +268,24 @@
                 </div>
             </div>
         </div>
-        {{/habilitar_destaque}}
+        {{/destaque_banner}}        
+        {{#destaque_curso}}
+        <div class="col-xs-12 col-md-4 text-center lessPaddingResponsible">
+            <a href='{{{url_destaque}}}'{{#url_destaque_target}} target="_blank"{{/url_destaque_target}}>
+            <img src='{{{imagem_destaque}}}' style="padding: 0 !important" class="col-xs-12 text-center lessPaddingResponsible"/>
+            </a>
+        </div>
+        {{/destaque_curso}}
+        {{#destaque_video}}
+        <div class="col-xs-12 col-md-4 text-center">
+            <div class="tamanhoVideo noCashing lessPaddingResponsible">
+                <iframe width="100%" height="100%" src="{{video_destaque}}" frameborder="0" allowfullscreen style="padding: 0;" class="heightVar"></iframe>
+            </div>
+            {{#url_destaque}}
+            <a href='{{{url_destaque}}}'{{#url_destaque_target}} target="_blank"{{/url_destaque_target}}>{{{url_destaque_label}}}</a>
+            {{/url_destaque}}
+        </div>
+        {{/destaque_video}}
 
         <div class="col-xs-12 hidden-md hidden-lg">
             <br />
@@ -312,7 +323,7 @@
                     </div>
                     <div class="c1 rememberusername">
                         <input type="checkbox" name="rememberusername" id="rememberusername" value="1">
-                        <label for="rememberusername">Lembrar CPF</label>
+                        <label for="rememberusername">{{rememberusername_label}}</label>
                     </div>
                 </div>
                 <div class="col-xs-12" style="background-color: #F7F7F7; border: 1px solid #E6E6E6; border-top: 0; padding-bottom: 3%;">

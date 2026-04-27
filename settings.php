@@ -25,6 +25,93 @@ defined('MOODLE_INTERNAL') || die();
 if ($ADMIN->fulltree) {
     $settings = new theme_ilb_admin_settingspage_tabs('themesettingilb', "ILB");
     
+    // Destaque ---------------------------------------------------------------
+    $page = new admin_settingpage('theme_ilb_destaque', 'Destaque');
+    // Modo do destaque
+    $page->add(new admin_setting_configselect(
+        "theme_ilb/modo_destaque",
+        "Modo de destaque",
+        "",
+        "banner",
+        array(
+            'banner' => 'Banner do Saberes',
+            'curso' => 'Imagem linkada com curso',
+            'link' => 'Imagem com link genérico',
+            'video' => 'Vídeo do Youtube com link opcional'
+        )
+    ));
+    // Curso de destaque
+    $page->add(new admin_setting_configtext(
+        'theme_ilb/curso_destaque',
+        'Curso de destaque',
+        'ID do curso acessado ao clicar na imagem de destaque',
+        '',
+        PARAM_TEXT,
+        4
+    ));
+    // URL de destque
+    $page->add(new admin_setting_configtext(
+        "theme_ilb/url_destaque",
+        "URL de destaque",
+        "Uma URL externa para ser acessada ao clicar na imagem de destaque ou no link do vídeo",
+        "",
+        PARAM_TEXT,
+        100
+    ));
+    $page->add(new admin_setting_configtext(
+        "theme_ilb/url_destaque_label",
+        "Label da URL de destaque",
+        "Um rótulo para o link de destaque quando o modo for Vídeo do youtube",
+        "Saiba mais",
+        PARAM_TEXT,
+        100
+    ));
+    $page->add(new admin_setting_configcheckbox(
+        "theme_ilb/url_destaque_target",
+        "Abrir em nova aba",
+        "",
+        0
+    ));
+
+    // Imagem destaque
+    $setting = new admin_setting_configstoredfile('theme_ilb/imagem_destaque',
+        'Imagem de destaque',
+        'Imagem a ser exibida como destaque',
+        'imagem_destaque',
+        0,
+        ["accepted_types" => [".png", ".jpg"]]
+    );
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+    // Qual imagem usar
+    $page->add(new admin_setting_configcheckbox(
+        "theme_ilb/use_course_image",
+        "Usar imagem do curso",
+        "Se marcado, a imagem de capa do curso será usada no destaque",
+        "0"
+    ));
+    $page->add(new admin_setting_configtext(
+        "theme_ilb/video_destaque",
+        "Vídeo de destaque",
+        "Entre a URL de um vídeo para ser mostrado no lugar da imagem de destaque,",
+        "",
+        PARAM_TEXT,
+        100
+    ));
+    $settings->add($page);
+
+    // Vídeo institucional ----------------------------------------------------
+    $page = new admin_settingpage('theme_ilb_institucional', 'Vídeo institucional');
+    $page->add(new admin_setting_configtext(
+        "theme_ilb/video_institucional",
+        "Vídeo institucional",
+        "Entre a URL de um vídeo institucional para ser mostrado na caixa institucional",
+        "https://www.youtube.com/embed/mvqFvkBF0PE",
+        PARAM_TEXT,
+        100
+    ));
+    $settings->add($page);
+
     // Bloco Acesso -----------------------------------------------------------
     $page = new admin_settingpage('theme_ilb_acesso', 'Bloco de acesso');
     // Signup url
@@ -45,59 +132,14 @@ if ($ADMIN->fulltree) {
         PARAM_TEXT,
         100
     ));
-    $settings->add($page);
-
-    // Destaque ---------------------------------------------------------------
-    $page = new admin_settingpage('theme_ilb_destaque', 'Destaque');
-    // Habilitar destaque
-    $page->add(new admin_setting_configcheckbox(
-        'theme_ilb/habilitar_destaque',
-        'Habilitar destaque',
-        'Indica se deve ser exibido destaque na página inicial', 0
-    ));
-    // Curso de destaque
+    // rememberusername label
     $page->add(new admin_setting_configtext(
-        'theme_ilb/curso_destaque',
-        'Curso de destaque',
-        'ID do curso acessado ao clicar na imagem de destaque',
-        '',
-        PARAM_TEXT,
-        4
-    ));
-    // URL de destque
-    $page->add(new admin_setting_configtext(
-        "theme_ilb/url_destaque",
-        "URL de destaque",
-        "Uma URL externa para ser acessada ao clicar na imagem de destaque ao invés do curso. Esta URL tem precedência sobre o campo Curso de destaque.",
+        "theme_ilb/rememberusername_label",
+        "Rótulo para o campo 'Lembrar username'",
         "",
+        "Lembrar meu usuário",
         PARAM_TEXT,
-        100
-    ));
-    // Imagem destaque
-    $setting = new admin_setting_configstoredfile('theme_ilb/imagem_destaque',
-        'Imagem de destaque',
-        'Imagem a ser exibida como destaque',
-        'imagem_destaque',
-        0,
-        ["accepted_types" => [".png", ".jpg"]]
-    );
-    $setting->set_updatedcallback('theme_reset_all_caches');
-    $page->add($setting);
-    // Qual imagem usar
-    $page->add(new admin_setting_configcheckbox(
-        "theme_ilb/use_course_image",
-        "Usar imagem do curso",
-        "Se marcado, a imagem de capa do curso será usada no destaque",
-        "0"
-    ));
-    // Vídeo institucional
-    $page->add(new admin_setting_configtext(
-        "theme_ilb/video_institucional",
-        "Vídeo institucional",
-        "Entre a URL de um vídeo institucional para ser mostrado na linha de destaque,",
-        "https://www.youtube.com/embed/mvqFvkBF0PE",
-        PARAM_TEXT,
-        100
+        30
     ));
     $settings->add($page);
 
@@ -221,9 +263,15 @@ if ($ADMIN->fulltree) {
     $num_perguntas = get_config("theme_ilb", "num_perguntas");
     if ($num_perguntas) {
         for ($pergunta = 1; $pergunta <= $num_perguntas; $pergunta++) {
+            $page->add(new admin_setting_heading(
+                "theme_ilb/pergunta{$pergunta}_heading",
+                "{$pergunta}ª pergunta",
+                ""
+            ));
+
             $page->add(new admin_setting_configtext(
                 "theme_ilb/pergunta".$pergunta,
-                "Pergunta ".$pergunta,
+                "Pergunta",
                 "Texto da pergunta",
                 "",
                 PARAM_TEXT,
@@ -231,7 +279,7 @@ if ($ADMIN->fulltree) {
             ));
             $page->add(new admin_setting_confightmleditor(
                 'theme_ilb/resposta'.$pergunta,
-                'Resposta '.$pergunta,
+                'Resposta',
                 'Resposta da pergunta',
                 '',
                 PARAM_RAW

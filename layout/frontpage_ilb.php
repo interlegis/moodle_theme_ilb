@@ -29,19 +29,23 @@ require_once($CFG->libdir . '/../config.php');
 $bodyattributes = $OUTPUT->body_attributes([]);
 
 
-$habilitar_destaque = $this->page->theme->settings->habilitar_destaque;
+$modo_destaque = $this->page->theme->settings->modo_destaque ?: 'banner';
 $curso_destaque = $this->page->theme->settings->curso_destaque;
 $url_destaque = $this->page->theme->settings->url_destaque;
+$url_destaque_label = $this->page->theme->settings->url_destaque_label ?: 'Saiba mais';
+$url_destaque_target = $this->page->theme->settings->url_destaque_target;
 $imagem_destaque = $this->page->theme->settings->imagem_destaque;
 $use_course_image = $this->page->theme->settings->use_course_image;
+$video_destaque = $this->page->theme->settings->video_destaque;
 $linha_marquet = format_text($this->page->theme->settings->linha_marquet, FORMAT_HTML);
-$video_institucional = $this->page->theme->settings->video_institucional;
-$signup = $this->page->theme->settings->signup;
-$forgotpwd = $this->page->theme->settings->forgotpwd;
-$servico = $this->page->theme->settings->servico;
-$telefone = $this->page->theme->settings->telefone;
-$email = $this->page->theme->settings->email;
-$redes_sociais = $this->page->theme->settings->redes_sociais;
+$video_institucional = $this->page->theme->settings->video_institucional ?: "https://www.youtube.com/embed/mvqFvkBF0PE";
+$signup = $this->page->theme->settings->signup ?: "login/signup.php";
+$forgotpwd = $this->page->theme->settings->forgotpwd ?: "login/forgot_password.php";
+$rememberusername_label = $this->page->theme->settings->rememberusername_label ?: "Lembrar meu usuário";
+$servico = $this->page->theme->settings->servico ?: "Serviço de Ensino a Distância – SEED";
+$telefone = $this->page->theme->settings->telefone ?: "+55 (61) 3303-1475";
+$email = $this->page->theme->settings->email ?: "ilbead@senado.leg.br";
+$redes_sociais = $this->page->theme->settings->redes_sociais ?: '<p style="font-weight:bold;">Facebook</p><p><a href="https://www.facebook.com/ilbsenado">https://www.facebook.com/ilbsenado</a></p>';
 $num_perguntas = $this->page->theme->settings->num_perguntas;
 $num_categorias = $this->page->theme->settings->num_categorias;
 
@@ -52,25 +56,15 @@ try {
 	$courseurl = null;
 }
 
-if (!$video_institucional) {
-	$video_institucional = "https://www.youtube.com/embed/mvqFvkBF0PE";
-}
-
-if (!$signup) {
-	$signup = "login/signup.php";
-}
-if (!$forgotpwd) {
-	$forgotpwd = "login/forgot_password.php";
-}
 if ($imagem_destaque) {
 	$imagem_destaque = $this->page->theme->setting_file_url('imagem_destaque', 'imagem_destaque');
 }
 
-if (!$url_destaque) {
+if (!$url_destaque or $modo_destaque == 'curso') {
 	$url_destaque = $courseurl;
 }
 
-if ($use_course_image == 1 and $curso_destaque) {
+if ($use_course_image == 1 and $course) {
 	if ($imagem_curso = \core_course\external\course_summary_exporter::get_course_image($course)) {
 		$imagem_destaque = $imagem_curso;
 	}
@@ -94,18 +88,25 @@ switch ($this->page->theme->settings->posicao_marquet) {
 
 if ($num_perguntas) {
 	$faq = [];
+	$count = 0;
 	for ($pergunta = 1; $pergunta <= $num_perguntas; $pergunta++) {
-		$faq[] = [
-			"indice" => $pergunta,
-			"pergunta" => $this->page->theme->settings->{"pergunta".$pergunta},
-			"resposta" => format_text($this->page->theme->settings->{"resposta".$pergunta}, FORMAT_HTML),
-		];
+		$questao = $this->page->theme->settings->{"pergunta".$pergunta};
+		$resposta = $this->page->theme->settings->{"resposta".$pergunta};
+		if ($questao != "" && $resposta != "") {
+			$count++;
+			$faq[] = [
+				"indice" => $count,
+				"pergunta" => $questao,
+				"resposta" => format_text($resposta, FORMAT_HTML),
+			];
+		}
 	}
 };
 
 if ($num_categorias) {
 	$context = context_system::instance();
 	$categorias = [];
+	$count = 0;
 	for ($categoria = 1; $categoria <= $num_categorias; $categoria++) {
 		$icon_url = moodle_url::make_pluginfile_url(
 			$context->id,
@@ -115,29 +116,20 @@ if ($num_categorias) {
 			"/",
 			$this->page->theme->settings->{"icone_categoria{$categoria}"}			
 		);
-		$categorias[] = [
-			"indice" => $categoria,
-			"categoria" => $this->page->theme->settings->{"categoria{$categoria}"},
-			"desc_categoria" => $this->page->theme->settings->{"desc_categoria{$categoria}"},
-			"icone_categoria" => $icon_url,
-			"quebra" => ($categoria % 4 == 0) && ($categoria < $num_categorias)
-		];
+		$url = $this->page->theme->settings->{"categoria{$categoria}"};
+		$desc_categoria = $this->page->theme->settings->{"desc_categoria{$categoria}"};
+		if ($url != "" && $desc_categoria != "") {
+			$count++;
+			$categorias[] = [
+				"indice" => $count,
+				"categoria" => $url,
+				"desc_categoria" => $desc_categoria,
+				"icone_categoria" => $icon_url,
+				"quebra" => ($count % 4 == 0) && ($categoria < $num_categorias)
+			];
+		}
 	}
 }
-
-if (!$servico) {
-	$servico = "Serviço de Ensino a Distância – SEED";
-}
-if (!$telefone) {
-	$telefone = "+55 (61) 3303-1475";
-}
-if (!$email) {
-	$email = "ilbead@senado.leg.br";
-}
-if (!$redes_sociais) {
-	$redes_sociais = ('<p style="font-weight:bold;">Facebook</p>
-         <p><a href="https://www.facebook.com/ilbsenado">https://www.facebook.com/ilbsenado</a></p>');
-};
 
 $templatecontext = [
 	'sitename' => format_string($SITE->shortname, true, ['context' => context_course::instance(SITEID), "escape" => false]),
@@ -156,15 +148,21 @@ $templatecontext = [
 	'logo_saberes_xl' => $OUTPUT->image_url('logo_saberes_xl', 'theme'),
 	'bodyattributes' => $bodyattributes,
 	'moodle_url' => $CFG->wwwroot,
-	'habilitar_destaque' => $habilitar_destaque,
+	'destaque_banner' => $modo_destaque == 'banner',
+	'destaque_curso' => $modo_destaque == 'curso' || $modo_destaque == 'link',
+	'destaque_video' => $modo_destaque == 'video',
 	'imagem_destaque' => $imagem_destaque,
+	'video_destaque' => $video_destaque,
 	'url_destaque' => $url_destaque,
+	'url_destaque_label' => $url_destaque_label,
+	'url_destaque_target' => $url_destaque_target,
 	'video_institucional' => $video_institucional,
 	'marquet_superior' => $marquet_superior,
 	'marquet_inferior' => $marquet_inferior,
 	'linha_marquet' => $linha_marquet,
 	'signup' => $signup,
 	'forgot-password' => $forgotpwd,
+	'rememberusername_label' => $rememberusername_label,
 	'hide_validador' => $this->page->theme->settings->hide_validador,
 	'hide_obter' => $this->page->theme->settings->hide_obter,
 	'hide_antigos' => $this->page->theme->settings->hide_antigos,
@@ -174,9 +172,9 @@ $templatecontext = [
 	'telefone' => $telefone,
 	'email' => $email,
 	'redes_sociais' => format_text($redes_sociais, FORMAT_HTML),
-	'tem_faq' => ($num_perguntas > 0),
+	'tem_faq' => !empty($faq),
 	'faq' => $faq,
-	'tem_categorias' => ($num_categorias > 0),
+	'tem_categorias' => !empty($categorias),
 	'categorias' => $categorias
 ];
 
